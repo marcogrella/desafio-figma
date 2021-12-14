@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@Builder
 @Service
 public class CargoService {
 

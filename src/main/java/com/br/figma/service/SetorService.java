@@ -17,7 +17,6 @@ import java.util.Optional;
 
 
 @RequiredArgsConstructor
-@Builder
 @Service
 public class SetorService {
 
@@ -28,14 +27,14 @@ public class SetorService {
     public Setor save(SetorDTO setorDTO) throws SetorEmUsoException {
        Setor setor = SetorMapper.INTANCE.toSetor(setorDTO);
        setor.setNome(setor.getNome().toUpperCase());
-       verificarSetorEmUso(setor);
+       verificarSetorEmUso(setor.getNome());
        return setorRepository.save(setor);
     }
 
     public Setor replace(SetorDTO setorDTO, String setorAtual) throws SetorNaoEncontradoException, SetorEmUsoException {
         Setor setorDB = findOrThrowException(setorAtual);
+        verificarSetorEmUso(setorDTO.getNome());
         Setor setor = SetorMapper.INTANCE.toSetor(setorDTO);
-        verificarSetorEmUso(setor);
         setorDB.setNome(setor.getNome().toUpperCase());
         return setorRepository.save(setorDB);
     }
@@ -46,16 +45,16 @@ public class SetorService {
     }
 
 
-    public Setor findOrThrowException(String nomeSetor) throws SetorNaoEncontradoException {
-        return setorRepository.findByNome(nomeSetor.toUpperCase())
-                .orElseThrow(() -> new SetorNaoEncontradoException("O setor com o nome " + nomeSetor + " não foi encontrado"));
+    public Setor findOrThrowException(String setorAtual) throws SetorNaoEncontradoException {
+        return setorRepository.findByNome(setorAtual.toUpperCase())
+                .orElseThrow(() -> new SetorNaoEncontradoException("O setor com o nome " + setorAtual + " não foi encontrado"));
     }
 
 
-    private void verificarSetorEmUso(Setor setor) throws SetorEmUsoException{
-        Optional<Setor> setorVerificado = setorRepository.findByNome(setor.getNome().toUpperCase());
+    public void verificarSetorEmUso(String setor) throws SetorEmUsoException{
+        Optional<Setor> setorVerificado = setorRepository.findByNome(setor.toUpperCase());
         if (setorVerificado.isPresent()){
-            throw new SetorEmUsoException("O setor com o nome " + setor.getNome() + " já está em uso");
+            throw new SetorEmUsoException("O setor com o nome " + setor + " já está em uso");
         }
     }
 

@@ -10,4 +10,17 @@ public class SetorCreator {
                 .build();
     }
 
+    public static Setor createSetorValido(){
+        return Setor.builder()
+                .id(1L)
+                .nome("Administração")
+                .build();
+    }
+
+    public static Setor createSetorParaAtualizacao(){
+        return Setor.builder()
+                .nome("Recursos Humanos")
+                .build();
+    }
+
 }

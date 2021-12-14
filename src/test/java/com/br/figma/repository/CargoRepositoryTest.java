@@ -59,9 +59,11 @@ class CargoRepositoryTest {
         Optional<Setor> setorSalvo = setorRepository.findByNome(setor.getNome());
 
         Cargo cargo = CargoCreator.createCargoASerSalvo("Auxiliar de Limpeza", setorSalvo.get());
-        Cargo cargoSalvo = cargoRepository.save(cargo);
+        cargoRepository.save(cargo);
+        Cargo cargoConflitante = CargoCreator.createCargoASerSalvo("Auxiliar de Limpeza", setorSalvo.get());
 
-        Assertions.assertThatThrownBy(() -> cargoRepository.save(cargoSalvo))
+
+        Assertions.assertThatThrownBy(() -> cargoRepository.save(cargoConflitante))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
