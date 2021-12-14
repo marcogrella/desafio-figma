@@ -6,6 +6,7 @@ import com.br.figma.model.Setor;
 import com.br.figma.utils.CargoCreator;
 import com.br.figma.utils.SetorCreator;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,12 @@ class CargoRepositoryTest {
 
     @Autowired
     SetorRepository setorRepository;
+
+    @BeforeEach
+    void cleanDataBase(){
+        cargoRepository.deleteAll();
+        setorRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("Teste para salvar um cargo")
@@ -54,10 +61,11 @@ class CargoRepositoryTest {
         Cargo cargo = CargoCreator.createCargoASerSalvo("Auxiliar de Limpeza", setorSalvo.get());
         Cargo cargoSalvo = cargoRepository.save(cargo);
 
-
         Assertions.assertThatThrownBy(() -> cargoRepository.save(cargoSalvo))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
+
+
 
 
 }
